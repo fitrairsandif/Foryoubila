@@ -15,9 +15,10 @@
 
   :root {
     --gold: #f7dfb5;
+    --gold-bright: #fff8eb;
     --gold-dim: rgba(247, 223, 181, 0.3);
     --bg-dark: #020205;
-    --glass: rgba(12, 12, 20, 0.4);
+    --glass: rgba(15, 15, 25, 0.5);
     --glass-border: rgba(255, 255, 255, 0.15);
   }
 
@@ -29,151 +30,156 @@
     perspective: 1500px; background: radial-gradient(circle at 50% 0%, #0a0a18 0%, #020205 80%);
   }
 
-  /* Efek Kotoran Film / Grain Bioskop */
+  /* ================= EFEK LAYAR ================= */
   .noise {
-    position: fixed; inset: 0; z-index: 9999; pointer-events: none; opacity: 0.08;
-    background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)"/></svg>');
+    position: fixed; inset: 0; z-index: 9999; pointer-events: none; opacity: 0.06;
+    background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)"/></svg>');
     mix-blend-mode: overlay;
   }
-
-  /* Efek Vignette (Sudut Gelap) */
   .vignette {
     position: fixed; inset: 0; z-index: 9998; pointer-events: none;
-    box-shadow: inset 0 0 150px rgba(0,0,0,0.9);
+    box-shadow: inset 0 0 150px rgba(0,0,0,0.95);
   }
 
-  /* Canvas untuk Bintang & Bokeh */
   #canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
 
-  /* ================= STAGE (Landing) ================= */
+  /* ================= STAGE (LANDING) ================= */
   .stage {
-    position: relative; z-index: 10; text-align: center; transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative; z-index: 10; text-align: center; transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
-  .stage.hidden { opacity: 0; transform: scale(1.2) translateZ(100px); pointer-events: none; filter: blur(15px); }
+  .stage.hidden { opacity: 0; transform: scale(1.5) translateZ(200px); pointer-events: none; filter: blur(20px); }
 
+  /* Efek Emas Berkilau */
   .title {
-    font-family: 'Cinzel', serif; font-size: clamp(3rem, 13vw, 4.5rem); font-weight: 700;
-    background: linear-gradient(135deg, #fff 0%, var(--gold) 50%, #fff 100%);
+    font-family: 'Cinzel', serif; font-size: clamp(3.2rem, 14vw, 5rem); font-weight: 700;
+    background: linear-gradient(to right, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+    background-size: 200% auto;
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    letter-spacing: 5px; margin-bottom: 5px; animation: revealUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
-    filter: drop-shadow(0 10px 30px rgba(247,223,181,0.2));
+    letter-spacing: 5px; margin-bottom: 5px; 
+    animation: shimmer 4s linear infinite, revealUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+    filter: drop-shadow(0 10px 30px rgba(247,223,181,0.3));
   }
+  @keyframes shimmer { to { background-position: 200% center; } }
+
   .subtitle {
     font-size: 0.7rem; font-weight: 300; letter-spacing: 8px; text-transform: uppercase;
     color: var(--gold); margin-bottom: 50px; animation: revealUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
-  }
-  .btn {
-    padding: 16px 45px; background: rgba(255,255,255,0.02); border: 1px solid var(--gold-dim);
-    border-radius: 50px; color: var(--gold); font-family: inherit; font-size: 0.85rem; font-weight: 600; letter-spacing: 3px;
-    cursor: pointer; animation: revealUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both;
-    box-shadow: 0 0 40px rgba(247,223,181,0.1), inset 0 0 20px rgba(247,223,181,0.05);
-    transition: all 0.4s;
-  }
-  .btn:active { transform: scale(0.95); background: rgba(247,223,181,0.15); border-color: var(--gold); }
-  
-  @keyframes revealUp {
-    0% { opacity: 0; transform: translateY(50px); filter: blur(10px); }
-    100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+    opacity: 0.8;
   }
 
-  /* ================= OVERLAY & CARDS ================= */
+  .btn {
+    position: relative; overflow: hidden; padding: 18px 50px; 
+    background: rgba(247, 223, 181, 0.05); border: 1px solid var(--gold-dim);
+    border-radius: 50px; color: var(--gold-bright); font-family: inherit; font-size: 0.9rem; font-weight: 600; letter-spacing: 3px;
+    cursor: pointer; animation: revealUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both;
+    box-shadow: 0 0 40px rgba(247,223,181,0.15), inset 0 0 20px rgba(247,223,181,0.1);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  .btn:active { transform: scale(0.9); background: var(--gold); color: #000; }
+  
+  @keyframes revealUp {
+    0% { opacity: 0; transform: translateY(40px) scale(0.9); filter: blur(10px); }
+    100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+  }
+
+  /* ================= OVERLAY & 3D CARDS ================= */
   .overlay {
     position: fixed; inset: 0; z-index: 100; display: flex; justify-content: center; align-items: center;
     opacity: 0; visibility: hidden; transition: all 1s ease;
-    background: rgba(2,2,5,0.2); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    background: rgba(2,2,5,0.3); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
   }
   .overlay.open { opacity: 1; visibility: visible; }
 
-  /* Container utama yang menangani 3D */
   .scene-container {
     width: 90vw; max-width: 400px; height: 600px; max-height: 80vh;
     position: relative; transform-style: preserve-3d;
+    transition: transform 0.1s linear;
   }
 
-  /* ================= INDIVIDUAL CARDS ================= */
+  /* Animasi Flip 3D Sinematik */
   .card {
     position: absolute; inset: 0; padding: 45px 30px;
     background: var(--glass);
-    backdrop-filter: blur(30px) saturate(180%); -webkit-backdrop-filter: blur(30px) saturate(180%);
+    backdrop-filter: blur(30px) saturate(200%); -webkit-backdrop-filter: blur(30px) saturate(200%);
     border-radius: 32px; border: 1px solid var(--glass-border);
     box-shadow: 0 30px 60px rgba(0,0,0,0.8), inset 0 0 0 1px rgba(255,255,255,0.05);
     overflow-y: auto; overscroll-behavior: contain;
     
-    /* Animasi default (disembunyikan & dibuat blur) */
     opacity: 0; visibility: hidden;
-    transform: translateX(100px) rotateY(20deg) scale(0.8);
-    filter: blur(10px) brightness(0.5);
-    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: rotateY(90deg) translateX(200px) scale(0.8);
+    filter: blur(20px) brightness(0.2);
+    transition: all 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
     transform-style: preserve-3d;
+    transform-origin: center right;
   }
 
   .card.active {
     opacity: 1; visibility: visible;
-    transform: translateX(0) rotateY(0deg) scale(1);
+    transform: rotateY(0deg) translateX(0) scale(1);
     filter: blur(0) brightness(1);
     z-index: 10;
+    transform-origin: center center;
   }
-  .card.exit-back {
+  
+  .card.exit {
     opacity: 0; visibility: hidden;
-    transform: translateX(-100px) rotateY(-20deg) scale(0.8);
-    filter: blur(10px) brightness(0.5);
+    transform: rotateY(-90deg) translateX(-200px) scale(0.8);
+    filter: blur(20px) brightness(0.2);
+    transform-origin: center left;
     z-index: 5;
   }
 
-  /* Holographic Light Reflection */
   .card::before {
     content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: -1;
-    background: radial-gradient(800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.08), transparent 40%),
-                linear-gradient(120deg, rgba(255,255,255,0.03) 0%, transparent 20%, transparent 80%, rgba(247,223,181,0.03) 100%);
+    background: radial-gradient(800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.1), transparent 40%),
+                linear-gradient(120deg, rgba(255,255,255,0.03) 0%, transparent 20%, transparent 80%, rgba(247,223,181,0.05) 100%);
   }
 
-  /* Close Button */
   .close {
     position: absolute; top: 20px; right: 20px; width: 34px; height: 34px; border-radius: 50%;
     background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
     color: #aaa; font-size: 1.2rem; display: flex; align-items: center; justify-content: center;
-    cursor: pointer; z-index: 50; transform: translateZ(30px);
+    cursor: pointer; z-index: 50; transform: translateZ(30px); transition: 0.3s;
   }
-  .close:active { background: var(--gold); color: #000; }
+  .close:active { background: var(--gold); color: #000; transform: translateZ(30px) rotate(90deg); }
 
-  /* ================= TEXT CONTENT ================= */
   .content-wrap { transform: translateZ(20px); }
+  
   .msg {
-    font-size: 1rem; line-height: 1.9; font-weight: 300; color: #eaeaea;
-    text-align: left; min-height: 120px;
+    font-size: 1.05rem; line-height: 1.9; font-weight: 300; color: #eaeaea;
+    text-align: left; min-height: 120px; letter-spacing: 0.5px;
   }
-  .msg-line { display: block; min-height: 1.6em; opacity: 0; transform: translateY(10px); transition: 0.6s ease; }
-  .msg-line.visible { opacity: 1; transform: translateY(0); }
+  .msg-line { display: block; min-height: 1.6em; opacity: 0; transform: translateY(15px) scale(0.95); transition: 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+  .msg-line.visible { opacity: 1; transform: translateY(0) scale(1); }
   
   .cursor {
-    display: inline-block; width: 6px; height: 1em; background: var(--gold);
-    margin-left: 3px; vertical-align: -1px; animation: blink 0.8s steps(1) infinite;
-    box-shadow: 0 0 10px var(--gold);
+    display: inline-block; width: 7px; height: 1.1em; background: var(--gold);
+    margin-left: 3px; vertical-align: -2px; animation: blink 0.8s steps(1) infinite;
+    box-shadow: 0 0 15px var(--gold);
   }
   @keyframes blink { 50% { opacity: 0; } }
 
-  /* ================= SAILING SCENE (FOTOREALISTIS) ================= */
+  /* ================= SAILING SCENE ================= */
   .scene {
     width: 100%; aspect-ratio: 16/11; margin: 25px 0 15px; border-radius: 16px;
     overflow: hidden; position: relative;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.1);
-    opacity: 0; transform: translateY(20px) scale(0.95); transition: 1s cubic-bezier(0.16,1,0.3,1);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.8), inset 0 0 0 1px rgba(255,255,255,0.1);
+    opacity: 0; transform: translateY(30px) scale(0.9); transition: 1.2s cubic-bezier(0.16,1,0.3,1);
     transform-style: preserve-3d;
   }
   .scene.visible { opacity: 1; transform: translateY(0) scale(1); }
   .scene svg { width: 100%; height: 100%; display: block; }
 
-  /* Animasi Air & Kapal */
   .water-layer { animation: wave 10s linear infinite; }
   .water-layer.layer-2 { animation-duration: 15s; animation-direction: reverse; }
   .water-layer.layer-3 { animation-duration: 20s; }
   @keyframes wave { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
   
-  .boat-wrap { transform-box: view-box; transform-origin: 200px 140px; animation: rock 7s ease-in-out infinite; }
-  @keyframes rock { 0%, 100% { transform: translateY(0) rotate(-1.5deg); } 50% { transform: translateY(-4px) rotate(1.5deg); } }
+  .boat-wrap { transform-box: view-box; transform-origin: 200px 140px; animation: rock 6s ease-in-out infinite; }
+  @keyframes rock { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-6px) rotate(2deg); } }
 
   .moon-pulse { animation: pulse 5s infinite alternate; transform-origin: center; }
-  @keyframes pulse { 0% { opacity: 0.85; transform: scale(0.98); } 100% { opacity: 1; transform: scale(1.02); } }
+  @keyframes pulse { 0% { opacity: 0.8; transform: scale(0.97); } 100% { opacity: 1; transform: scale(1.03); } }
 
   .shooting-star { animation: shoot 4s ease-in infinite; }
   @keyframes shoot {
@@ -183,9 +189,9 @@
   }
 
   .signature {
-    font-family: 'Great Vibes', cursive; font-size: 2rem; color: var(--gold);
-    text-align: right; margin-top: 20px; opacity: 0; transform: translateY(15px); transition: 1s ease 0.8s;
-    text-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    font-family: 'Great Vibes', cursive; font-size: 2.2rem; color: var(--gold-bright);
+    text-align: right; margin-top: 20px; opacity: 0; transform: translateY(20px); transition: 1s ease 0.8s;
+    text-shadow: 0 5px 20px rgba(247,223,181,0.4);
   }
   .signature.visible { opacity: 1; transform: translateY(0); }
 
@@ -193,21 +199,21 @@
   .nav { display: flex; justify-content: space-between; align-items: center; margin-top: 25px; transform: translateZ(25px); }
   .nav-btn {
     background: transparent; border: none; color: var(--gold-dim);
-    font-family: inherit; font-size: 0.75rem; font-weight: 600; letter-spacing: 2px;
+    font-family: inherit; font-size: 0.8rem; font-weight: 600; letter-spacing: 2px;
     display: none; align-items: center; gap: 8px; padding: 10px 0; cursor: pointer; transition: 0.3s;
   }
   .nav-btn.show { display: flex; animation: fadeIn 0.6s ease; }
-  .nav-btn:active { color: var(--gold); }
+  .nav-btn:active { color: var(--gold); transform: scale(0.9); }
   .nav-btn svg { width: 16px; height: 16px; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
   /* ================= MUSIC PLAYER ================= */
   .music {
     position: fixed; bottom: calc(20px + env(safe-area-inset-bottom, 20px)); left: 20px;
     display: flex; align-items: center; gap: 12px; padding: 8px 16px 8px 8px;
-    background: rgba(5,5,10,0.7); backdrop-filter: blur(15px); border: 1px solid var(--glass-border);
+    background: rgba(5,5,10,0.8); backdrop-filter: blur(15px); border: 1px solid var(--glass-border);
     border-radius: 50px; z-index: 1000; opacity: 0; pointer-events: none; transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-    transform: translateY(20px);
+    transform: translateY(30px);
   }
   body.modal-open .music { opacity: 1; pointer-events: auto; transform: translateY(0); }
   .music svg { width: 14px; height: 14px; fill: var(--gold); }
@@ -263,89 +269,62 @@
         <div class="content-wrap">
           <p class="msg" id="msg1"></p>
           
-          <!-- PANORAMA LAUT MALAM (FOTOREALISTIS) -->
           <div class="scene" id="scene1">
             <svg viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice">
               <defs>
                 <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#02020a"/>
-                  <stop offset="50%" stop-color="#0d0d26"/>
-                  <stop offset="100%" stop-color="#1a1835"/>
+                  <stop offset="0%" stop-color="#02020a"/><stop offset="50%" stop-color="#0d0d26"/><stop offset="100%" stop-color="#1a1835"/>
                 </linearGradient>
                 <linearGradient id="seaGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#0a0a1a"/>
-                  <stop offset="100%" stop-color="#000000"/>
+                  <stop offset="0%" stop-color="#0a0a1a"/><stop offset="100%" stop-color="#000000"/>
                 </linearGradient>
-                
                 <radialGradient id="moonLight" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" stop-color="rgba(255, 250, 240, 1)"/>
-                  <stop offset="10%" stop-color="rgba(255, 240, 210, 0.9)"/>
-                  <stop offset="40%" stop-color="rgba(255, 220, 160, 0.2)"/>
-                  <stop offset="100%" stop-color="rgba(255, 220, 160, 0)"/>
+                  <stop offset="0%" stop-color="rgba(255, 250, 240, 1)"/><stop offset="10%" stop-color="rgba(255, 240, 210, 0.9)"/>
+                  <stop offset="40%" stop-color="rgba(255, 220, 160, 0.2)"/><stop offset="100%" stop-color="rgba(255, 220, 160, 0)"/>
                 </radialGradient>
-                
                 <linearGradient id="waterReflect" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="rgba(255, 240, 200, 0.4)"/>
-                  <stop offset="100%" stop-color="rgba(255, 240, 200, 0)"/>
+                  <stop offset="0%" stop-color="rgba(255, 240, 200, 0.4)"/><stop offset="100%" stop-color="rgba(255, 240, 200, 0)"/>
                 </linearGradient>
-
                 <filter id="blurGlow" x="-50%" y="-50%" width="200%" height="200%">
-                  <feGaussianBlur stdDeviation="6" result="blur"/>
-                  <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                  <feGaussianBlur stdDeviation="6" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
                 </filter>
                 <filter id="softBlur"><feGaussianBlur stdDeviation="2"/></filter>
               </defs>
 
-              <!-- 1. LANGIT & BINTANG -->
               <rect width="400" height="140" fill="url(#skyGrad)"/>
               <g fill="#fff">
                 <circle cx="50" cy="30" r="0.8" opacity="0.6"/><circle cx="120" cy="60" r="1" opacity="0.4"/>
                 <circle cx="200" cy="20" r="1.2" opacity="0.8"/><circle cx="350" cy="40" r="0.6" opacity="0.5"/>
                 <circle cx="280" cy="80" r="1" opacity="0.3"/><circle cx="80" cy="100" r="0.8" opacity="0.7"/>
-                <circle cx="150" cy="40" r="0.5" opacity="0.8"/><circle cx="380" cy="110" r="1" opacity="0.4"/>
               </g>
-              
-              <!-- Bintang Jatuh -->
               <line class="shooting-star" x1="350" y1="10" x2="320" y2="40" stroke="#fff" stroke-width="1.5" stroke-linecap="round" opacity="0.8" filter="url(#softBlur)"/>
-
-              <!-- 2. BULAN -->
               <g class="moon-pulse">
                 <circle cx="320" cy="50" r="50" fill="url(#moonLight)"/>
                 <circle cx="320" cy="50" r="14" fill="#fffdfa" filter="url(#blurGlow)"/>
-                <circle cx="316" cy="46" r="3" fill="rgba(0,0,0,0.05)"/>
-                <circle cx="323" cy="52" r="4" fill="rgba(0,0,0,0.04)"/>
+                <circle cx="316" cy="46" r="3" fill="rgba(0,0,0,0.05)"/><circle cx="323" cy="52" r="4" fill="rgba(0,0,0,0.04)"/>
               </g>
-
-              <!-- 3. GUNUNG & KABUT -->
               <path d="M0,120 Q60,100 130,120 T280,110 T400,125 L400,140 L0,140 Z" fill="#05050f"/>
               <path d="M-50,130 Q100,110 200,125 T450,115 L450,140 L-50,140 Z" fill="#020208" opacity="0.8"/>
               <rect y="130" width="400" height="20" fill="rgba(20, 20, 40, 0.4)" filter="url(#blurGlow)"/>
-
-              <!-- 4. LAUTAN DALAM -->
               <rect y="140" width="400" height="110" fill="url(#seaGrad)"/>
               <path d="M300,140 L340,140 L330,200 L310,200 Z" fill="url(#waterReflect)" filter="url(#softBlur)"/>
               
-              <!-- 5. GELOMBANG BELAKANG -->
               <g class="water-layer layer-1" stroke="rgba(255,255,255,0.08)" stroke-width="1.5" fill="none">
                 <path d="M -200 160 Q -150 155 -100 160 T 0 160 T 100 160 T 200 160 T 300 160 T 400 160 T 500 160 T 600 160" />
               </g>
-
-              <!-- 6. KAPAL & SEPASANG MANUSIA -->
+              
               <g class="boat-wrap">
                 <circle cx="200" cy="148" r="15" fill="rgba(255, 180, 100, 0.15)" filter="url(#blurGlow)"/>
                 <circle cx="200" cy="148" r="4" fill="#ffb366" filter="url(#blurGlow)"/>
-                
                 <line x1="200" y1="100" x2="200" y2="150" stroke="#000" stroke-width="2.5" />
                 <path d="M 200 100 Q 165 120 160 148 L 200 148 Z" fill="#0a0a0c" />
                 <path d="M 200 100 Q 235 120 240 148 L 200 148 Z" fill="#111114" />
                 <path d="M 150 148 Q 175 165 200 165 Q 225 165 250 148 Q 200 158 150 148 Z" fill="#030303" />
-
                 <g>
                   <circle cx="191" cy="126" r="3.5" fill="#000"/>
                   <line x1="191" y1="130" x2="191" y2="152" stroke="#000" stroke-width="3" stroke-linecap="round" />
                   <line x1="191" y1="136" x2="197" y2="140" stroke="#000" stroke-width="2" stroke-linecap="round" />
                 </g>
-
                 <g>
                   <circle cx="201" cy="128" r="3" fill="#000"/>
                   <path d="M 198 128 Q 205 130 205 140" stroke="#000" stroke-width="2" fill="none"/>
@@ -353,8 +332,6 @@
                   <line x1="201" y1="136" x2="197" y2="140" stroke="#000" stroke-width="2" stroke-linecap="round" />
                 </g>
               </g>
-
-              <!-- 7. GELOMBANG DEPAN -->
               <g class="water-layer layer-2" stroke="rgba(255,255,255,0.12)" stroke-width="2" fill="none">
                 <path d="M -200 180 Q -120 175 -40 180 T 120 180 T 280 180 T 440 180 T 600 180" />
               </g>
@@ -382,23 +359,26 @@
   const isTouch = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
 
   /* =========================================
-     1. CANVAS PARTICLES
+     1. CANVAS ENGINE: Particles, Shockwave, & Stardust
      ========================================= */
   const canvas = document.getElementById('canvas');
   const ctx = canvas.getContext('2d');
-  let W, H, particles = [];
+  let W, H;
+  let particles = [];
+  let shockwaves = [];
+  let stardust = [];
   const mouse = { x: -1000, y: -1000, radius: 150 };
 
   function initCanvas() {
     W = canvas.width = window.innerWidth;
     H = canvas.height = window.innerHeight;
     particles = [];
-    const count = isTouch ? 50 : 100;
+    const count = isTouch ? 60 : 120;
     for (let i = 0; i < count; i++) {
       const isForeground = Math.random() > 0.7;
       particles.push({
         x: Math.random() * W, y: Math.random() * H,
-        vx: (Math.random() - 0.5) * 0.4, vy: (Math.random() - 0.5) * 0.4,
+        vx: (Math.random() - 0.5) * 0.5, vy: (Math.random() - 0.5) * 0.5,
         size: isForeground ? Math.random() * 4 + 2 : Math.random() * 1.5 + 0.5,
         blur: isForeground ? 3 : 0,
         color: Math.random() > 0.5 ? '247, 223, 181' : '255, 255, 255'
@@ -406,9 +386,39 @@
     }
   }
 
+  // 1. Efek Shockwave saat di-klik
+  function spawnShockwave(x, y) {
+    shockwaves.push({ x, y, radius: 0, maxRadius: 300, opacity: 1 });
+    // Tembakan partikel
+    for (let i = 0; i < 50; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const speed = Math.random() * 10 + 2;
+      stardust.push({
+        x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
+        size: Math.random() * 4 + 1, life: 1, decay: Math.random() * 0.02 + 0.015,
+        color: '255, 223, 181'
+      });
+    }
+  }
+
+  // 2. Efek Hujan Bintang (Slide 2)
+  function spawnStardustShower() {
+    for (let i = 0; i < 100; i++) {
+      setTimeout(() => {
+        stardust.push({
+          x: Math.random() * W, y: -20,
+          vx: (Math.random() - 0.5) * 2, vy: Math.random() * 3 + 1,
+          size: Math.random() * 3 + 1, life: 1, decay: 0.005,
+          color: '247, 223, 181'
+        });
+      }, Math.random() * 1500); // Jatuh bergantian
+    }
+  }
+
   function draw() {
     ctx.clearRect(0, 0, W, H);
     
+    // Draw Particles
     particles.forEach(p => {
       p.x += p.vx; p.y += p.vy;
       if (p.x < 0 || p.x > W) p.vx *= -1;
@@ -426,15 +436,41 @@
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
       ctx.fillStyle = `rgba(${p.color}, ${Math.random() * 0.4 + 0.2})`;
-      
-      if (p.blur > 0) {
-        ctx.shadowBlur = p.blur * 5;
-        ctx.shadowColor = `rgba(${p.color}, 0.8)`;
-      }
-      
+      if (p.blur > 0) { ctx.shadowBlur = p.blur * 5; ctx.shadowColor = `rgba(${p.color}, 0.8)`; }
       ctx.fill();
       ctx.shadowBlur = 0; 
     });
+
+    // Draw Shockwaves
+    for (let i = shockwaves.length - 1; i >= 0; i--) {
+      let sw = shockwaves[i];
+      sw.radius += 8;
+      sw.opacity -= 0.02;
+      if (sw.opacity <= 0) { shockwaves.splice(i, 1); continue; }
+
+      ctx.beginPath();
+      ctx.arc(sw.x, sw.y, sw.radius, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(247, 223, 181, ${sw.opacity})`;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+
+    // Draw Stardust (Ledakan/Hujan)
+    for (let i = stardust.length - 1; i >= 0; i--) {
+      let sd = stardust[i];
+      sd.x += sd.vx; sd.y += sd.vy;
+      sd.vx *= 0.96; sd.vy *= 0.96;
+      sd.life -= sd.decay;
+      if (sd.life <= 0) { stardust.splice(i, 1); continue; }
+
+      ctx.beginPath();
+      ctx.arc(sd.x, sd.y, sd.size, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${sd.color}, ${sd.life})`;
+      ctx.shadowBlur = 10; ctx.shadowColor = `rgba(${sd.color}, ${sd.life})`;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    }
+
     requestAnimationFrame(draw);
   }
 
@@ -442,13 +478,19 @@
   initCanvas();
   draw();
 
+  // Deteksi Klik Global untuk Shockwave
+  window.addEventListener('pointerdown', (e) => {
+    // Hanya munculkan shockwave jika layar belum penuh dengan kartu
+    if(!document.getElementById('overlay').classList.contains('open')) {
+      spawnShockwave(e.clientX, e.clientY);
+    }
+  });
+
   /* =========================================
-     2. 3D PARALLAX
+     2. 3D PARALLAX (Gyroscope)
      ========================================= */
   const sceneContainer = document.getElementById('sceneContainer');
-  const card0 = document.getElementById('card0');
-  const card1 = document.getElementById('card1');
-
+  
   if (isTouch) {
     window.addEventListener('deviceorientation', (e) => {
       if (!e.gamma || !e.beta) return;
@@ -467,31 +509,8 @@
     });
   }
 
-  sceneContainer.addEventListener('mousemove', (e) => {
-    if (isTouch) return;
-    const rect = sceneContainer.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const rotX = ((y - centerY) / centerY) * -8;
-    const rotY = ((x - centerX) / centerX) * 8;
-    
-    sceneContainer.style.transform = `perspective(1200px) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
-    
-    document.querySelectorAll('.card').forEach(c => {
-      c.style.setProperty('--mouse-x', `${x}px`);
-      c.style.setProperty('--mouse-y', `${y}px`);
-    });
-  });
-  
-  sceneContainer.addEventListener('mouseleave', () => {
-    if (isTouch) return;
-    sceneContainer.style.transform = `perspective(1200px) rotateX(0) rotateY(0)`;
-  });
-
   /* =========================================
-     3. UI LOGIC & TYPEWRITER
+     3. LOGIKA KARTU & TYPEWRITER
      ========================================= */
   const overlay = document.getElementById('overlay');
   const openBtn = document.getElementById('openBtn');
@@ -500,9 +519,10 @@
   const prevBtn = document.getElementById('prevBtn');
   const audio = document.getElementById('audio');
   const musicBtn = document.getElementById('musicBtn');
+  const card0 = document.getElementById('card0');
+  const card1 = document.getElementById('card1');
   let isPlaying = false;
 
-  // TEKS PESAN YANG SUDAH DIPERBARUI
   const texts = [
     'Hai Bila. Aku bikin ini bukan buat pamer, tapi murni karena pengen lihat kamu senyum hari ini. Terima kasih ya udah bertahan dan berusaha sejauh ini. Jangan lupa istirahat, aku bangga sama kamu. 🌻',
     'Masih banyak hal seru yang belum kita jelajahi. Mari berlayar, membuka hal-hal baru, bersama. Aku akan selalu ada di sini nemenin kamu.'
@@ -564,35 +584,36 @@
     type();
   }
 
-  function goTo(idx) {
+  function goTo(idx, e) {
     if(idx === currSlide) return;
     clearTimeout(typeTimer);
     nextBtn.classList.remove('show'); prevBtn.classList.remove('show');
 
     if (idx === 1) {
       card0.classList.remove('active');
-      card0.classList.add('exit-back');
-      card1.classList.remove('exit-back');
+      card0.classList.add('exit');
+      card1.classList.remove('exit');
       card1.classList.add('active');
     } else {
       card1.classList.remove('active');
-      card1.classList.add('exit-back');
-      card0.classList.remove('exit-back');
+      card1.classList.add('exit');
+      card0.classList.remove('exit');
       card0.classList.add('active');
     }
 
     currSlide = idx;
 
     if(!typed[idx]) {
-      setTimeout(() => typeText(idx), 500);
+      setTimeout(() => typeText(idx), 600);
+      if(idx === 1) spawnStardustShower(); // Hujan emas saat pindah ke kapal
     } else {
       if(idx === 0) nextBtn.classList.add('show');
       if(idx === 1) prevBtn.classList.add('show');
     }
   }
 
-  nextBtn.onclick = () => goTo(1);
-  prevBtn.onclick = () => goTo(0);
+  nextBtn.onclick = (e) => goTo(1, e);
+  prevBtn.onclick = (e) => goTo(0, e);
 
   /* =========================================
      4. OPEN / CLOSE APP
@@ -602,12 +623,12 @@
     document.body.classList.add('modal-open');
     stage.classList.add('hidden');
     
-    audio.volume = 0.5;
+    audio.volume = 0.6;
     audio.play().then(() => {
       isPlaying = true; musicBtn.classList.add('playing');
     }).catch(() => console.log("Autoplay block"));
 
-    setTimeout(() => typeText(0), 800);
+    setTimeout(() => typeText(0), 900);
   }
 
   function closeApp() {
@@ -619,8 +640,8 @@
     
     setTimeout(() => {
       currSlide = 0; typed = [false, false];
-      card1.classList.remove('active', 'exit-back');
-      card0.classList.remove('exit-back');
+      card1.classList.remove('active', 'exit');
+      card0.classList.remove('exit');
       card0.classList.add('active');
       
       document.getElementById('msg0').innerHTML = '';
