@@ -3,231 +3,229 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<meta name="theme-color" content="#050510" />
+<meta name="theme-color" content="#020205" />
 <title>Untuk Bila</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Plus+Jakarta+Sans:wght@300;400;600&family=Great+Vibes&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Plus+Jakarta+Sans:wght@200;300;400;600&family=Great+Vibes&display=swap" rel="stylesheet">
 
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
   :root {
-    --gold: #f0d5ab;
-    --gold-glow: rgba(240, 213, 171, 0.4);
-    --bg-dark: #050510;
-    --glass: rgba(15, 15, 25, 0.65);
-    --glass-border: rgba(255, 255, 255, 0.1);
+    --gold: #f7dfb5;
+    --gold-dim: rgba(247, 223, 181, 0.3);
+    --bg-dark: #020205;
+    --glass: rgba(12, 12, 20, 0.4);
+    --glass-border: rgba(255, 255, 255, 0.15);
   }
 
   html, body { height: 100%; overflow: hidden; background-color: var(--bg-dark); }
 
   body {
     font-family: 'Plus Jakarta Sans', sans-serif;
-    color: #fff;
-    display: flex; justify-content: center; align-items: center;
-    perspective: 1200px;
+    color: #fff; display: flex; justify-content: center; align-items: center;
+    perspective: 1500px; background: radial-gradient(circle at 50% 0%, #0a0a18 0%, #020205 80%);
   }
 
-  /* Film Grain */
+  /* Efek Kotoran Film / Grain Bioskop */
   .noise {
-    position: fixed; inset: 0; z-index: 9999; pointer-events: none; opacity: 0.06;
-    background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)"/></svg>');
+    position: fixed; inset: 0; z-index: 9999; pointer-events: none; opacity: 0.08;
+    background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)"/></svg>');
+    mix-blend-mode: overlay;
   }
 
-  /* Canvas Background */
-  #canvas {
-    position: fixed; inset: 0; z-index: 0;
-    background: radial-gradient(circle at 50% 0%, rgba(30, 20, 60, 0.8) 0%, transparent 60%),
-                radial-gradient(circle at 100% 100%, rgba(60, 40, 20, 0.4) 0%, transparent 50%);
+  /* Efek Vignette (Sudut Gelap) */
+  .vignette {
+    position: fixed; inset: 0; z-index: 9998; pointer-events: none;
+    box-shadow: inset 0 0 150px rgba(0,0,0,0.9);
   }
+
+  /* Canvas untuk Bintang & Bokeh */
+  #canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
 
   /* ================= STAGE (Landing) ================= */
   .stage {
-    position: relative; z-index: 10; text-align: center;
-    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-    padding: 0 20px;
+    position: relative; z-index: 10; text-align: center; transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
   }
-  .stage.hidden { opacity: 0; transform: scale(1.1) translateZ(100px); pointer-events: none; filter: blur(10px); }
+  .stage.hidden { opacity: 0; transform: scale(1.2) translateZ(100px); pointer-events: none; filter: blur(15px); }
 
-  .reveal-wrap { overflow: hidden; display: block; }
   .title {
-    font-family: 'Cinzel', serif; font-size: clamp(2.8rem, 12vw, 4rem); font-weight: 700;
+    font-family: 'Cinzel', serif; font-size: clamp(3rem, 13vw, 4.5rem); font-weight: 700;
     background: linear-gradient(135deg, #fff 0%, var(--gold) 50%, #fff 100%);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    letter-spacing: 4px; margin-bottom: 5px;
-    animation: revealUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
-    filter: drop-shadow(0 0 20px rgba(240,213,171,0.3));
+    letter-spacing: 5px; margin-bottom: 5px; animation: revealUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+    filter: drop-shadow(0 10px 30px rgba(247,223,181,0.2));
   }
   .subtitle {
-    font-size: 0.7rem; font-weight: 300; letter-spacing: 6px; text-transform: uppercase;
-    color: var(--gold); margin-bottom: 50px; opacity: 0.8;
-    animation: revealUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
+    font-size: 0.7rem; font-weight: 300; letter-spacing: 8px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 50px; animation: revealUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
   }
-
+  .btn {
+    padding: 16px 45px; background: rgba(255,255,255,0.02); border: 1px solid var(--gold-dim);
+    border-radius: 50px; color: var(--gold); font-family: inherit; font-size: 0.85rem; font-weight: 600; letter-spacing: 3px;
+    cursor: pointer; animation: revealUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both;
+    box-shadow: 0 0 40px rgba(247,223,181,0.1), inset 0 0 20px rgba(247,223,181,0.05);
+    transition: all 0.4s;
+  }
+  .btn:active { transform: scale(0.95); background: rgba(247,223,181,0.15); border-color: var(--gold); }
+  
   @keyframes revealUp {
-    0% { opacity: 0; transform: translateY(40px); filter: blur(5px); }
+    0% { opacity: 0; transform: translateY(50px); filter: blur(10px); }
     100% { opacity: 1; transform: translateY(0); filter: blur(0); }
   }
 
-  .btn-container { animation: revealUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both; }
-  .btn {
-    position: relative; padding: 16px 45px;
-    background: rgba(255,255,255,0.03); border: 1px solid var(--gold);
-    border-radius: 50px; color: var(--gold);
-    font-family: inherit; font-size: 0.9rem; font-weight: 600; letter-spacing: 2px;
-    cursor: pointer; overflow: hidden;
-    box-shadow: 0 0 30px rgba(240,213,171,0.1), inset 0 0 10px rgba(240,213,171,0.1);
-    transition: all 0.4s ease;
-  }
-  .btn:active { transform: scale(0.95); background: rgba(240,213,171,0.2); }
-  .btn::after {
-    content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-    transform: skewX(-20deg); animation: shine 3s infinite; pointer-events: none;
-  }
-  @keyframes shine { 0% { left: -100%; } 20% { left: 200%; } 100% { left: 200%; } }
-
-  /* ================= OVERLAY & CARDS CONTAINER ================= */
+  /* ================= OVERLAY & CARDS ================= */
   .overlay {
-    position: fixed; inset: 0; z-index: 100;
-    display: flex; justify-content: center; align-items: center;
-    background: rgba(5,5,10,0.3); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
-    opacity: 0; visibility: hidden; transition: all 0.6s ease;
+    position: fixed; inset: 0; z-index: 100; display: flex; justify-content: center; align-items: center;
+    opacity: 0; visibility: hidden; transition: all 1s ease;
+    background: rgba(2,2,5,0.2); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
   }
   .overlay.open { opacity: 1; visibility: visible; }
 
-  .cards-container {
-    width: 88vw; max-width: 420px;
-    display: grid; grid-template-columns: 1fr;
-    transform-style: preserve-3d;
-    transition: transform 0.1s linear;
+  /* Container utama yang menangani 3D */
+  .scene-container {
+    width: 90vw; max-width: 400px; height: 600px; max-height: 80vh;
+    position: relative; transform-style: preserve-3d;
   }
 
   /* ================= INDIVIDUAL CARDS ================= */
   .card {
-    grid-area: 1 / 1; /* Menumpuk kedua kartu di posisi yang sama */
-    position: relative; width: 100%; max-height: 80vh; overflow-y: auto; overscroll-behavior: contain;
-    padding: 40px 30px;
+    position: absolute; inset: 0; padding: 45px 30px;
     background: var(--glass);
-    backdrop-filter: blur(24px) saturate(150%); -webkit-backdrop-filter: blur(24px) saturate(150%);
-    border-radius: 24px; border: 1px solid var(--glass-border);
-    box-shadow: 0 25px 60px rgba(0,0,0,0.6), inset 0 0 20px rgba(255,255,255,0.02);
+    backdrop-filter: blur(30px) saturate(180%); -webkit-backdrop-filter: blur(30px) saturate(180%);
+    border-radius: 32px; border: 1px solid var(--glass-border);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.8), inset 0 0 0 1px rgba(255,255,255,0.05);
+    overflow-y: auto; overscroll-behavior: contain;
     
-    /* Animasi Default (Sembunyi) */
-    opacity: 0; transform: translateX(40px) scale(0.9);
-    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-    pointer-events: none; z-index: 1;
+    /* Animasi default (disembunyikan & dibuat blur) */
+    opacity: 0; visibility: hidden;
+    transform: translateX(100px) rotateY(20deg) scale(0.8);
+    filter: blur(10px) brightness(0.5);
+    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
     transform-style: preserve-3d;
   }
 
-  /* Kartu yang Aktif */
   .card.active {
-    opacity: 1; transform: translateX(0) scale(1);
-    pointer-events: auto; z-index: 2;
+    opacity: 1; visibility: visible;
+    transform: translateX(0) rotateY(0deg) scale(1);
+    filter: blur(0) brightness(1);
+    z-index: 10;
   }
-
-  /* Kartu yang Keluar (Mundur ke kiri) */
   .card.exit-back {
-    opacity: 0; transform: translateX(-40px) scale(0.9);
-    pointer-events: none; z-index: 1;
+    opacity: 0; visibility: hidden;
+    transform: translateX(-100px) rotateY(-20deg) scale(0.8);
+    filter: blur(10px) brightness(0.5);
+    z-index: 5;
   }
 
-  /* Spotlight Effect */
+  /* Holographic Light Reflection */
   .card::before {
-    content: ''; position: absolute; inset: 0; z-index: -1; border-radius: inherit;
-    background: radial-gradient(400px circle at var(--x, 50%) var(--y, 50%), rgba(240,213,171,0.1), transparent 40%);
-    pointer-events: none;
+    content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: -1;
+    background: radial-gradient(800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.08), transparent 40%),
+                linear-gradient(120deg, rgba(255,255,255,0.03) 0%, transparent 20%, transparent 80%, rgba(247,223,181,0.03) 100%);
   }
 
+  /* Close Button */
   .close {
-    position: absolute; top: 15px; right: 15px; width: 32px; height: 32px;
-    border-radius: 50%; background: rgba(255,255,255,0.05); border: none;
+    position: absolute; top: 20px; right: 20px; width: 34px; height: 34px; border-radius: 50%;
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
     color: #aaa; font-size: 1.2rem; display: flex; align-items: center; justify-content: center;
-    cursor: pointer; z-index: 10; transition: 0.3s;
+    cursor: pointer; z-index: 50; transform: translateZ(30px);
   }
   .close:active { background: var(--gold); color: #000; }
 
-  /* ================= TEXT & CONTENT ================= */
+  /* ================= TEXT CONTENT ================= */
+  .content-wrap { transform: translateZ(20px); }
   .msg {
-    font-size: 1rem; line-height: 1.8; font-weight: 300; color: #eaeaea;
-    text-align: left; min-height: 100px; letter-spacing: 0.5px;
+    font-size: 1rem; line-height: 1.9; font-weight: 300; color: #eaeaea;
+    text-align: left; min-height: 120px;
   }
-  .msg-line { display: block; min-height: 1.5em; opacity: 0; transform: translateY(10px); transition: 0.5s; }
+  .msg-line { display: block; min-height: 1.6em; opacity: 0; transform: translateY(10px); transition: 0.6s ease; }
   .msg-line.visible { opacity: 1; transform: translateY(0); }
   
   .cursor {
     display: inline-block; width: 6px; height: 1em; background: var(--gold);
     margin-left: 3px; vertical-align: -1px; animation: blink 0.8s steps(1) infinite;
+    box-shadow: 0 0 10px var(--gold);
   }
   @keyframes blink { 50% { opacity: 0; } }
 
-  /* ================= SAILING SCENE ================= */
+  /* ================= SAILING SCENE (FOTOREALISTIS) ================= */
   .scene {
-    width: 100%; aspect-ratio: 16/11; margin: 20px 0 10px; border-radius: 12px;
-    overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    opacity: 0; transform: translateY(20px) scale(0.95); transition: 0.8s ease;
+    width: 100%; aspect-ratio: 16/11; margin: 25px 0 15px; border-radius: 16px;
+    overflow: hidden; position: relative;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.1);
+    opacity: 0; transform: translateY(20px) scale(0.95); transition: 1s cubic-bezier(0.16,1,0.3,1);
+    transform-style: preserve-3d;
   }
   .scene.visible { opacity: 1; transform: translateY(0) scale(1); }
   .scene svg { width: 100%; height: 100%; display: block; }
 
-  /* Animasi Kapal & Air */
-  .moon { animation: pulseMoon 4s infinite alternate; transform-origin: center; }
-  @keyframes pulseMoon { 0% { opacity: 0.8; } 100% { opacity: 1; filter: drop-shadow(0 0 10px #fff); } }
-  .wave-1 { animation: wave 8s linear infinite; }
-  .wave-2 { animation: wave 12s linear infinite reverse; }
-  .wave-3 { animation: wave 16s linear infinite; }
+  /* Animasi Air & Kapal */
+  .water-layer { animation: wave 10s linear infinite; }
+  .water-layer.layer-2 { animation-duration: 15s; animation-direction: reverse; }
+  .water-layer.layer-3 { animation-duration: 20s; }
   @keyframes wave { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-  .boat { transform-box: view-box; transform-origin: 200px 110px; animation: rock 6s ease-in-out infinite; }
+  
+  .boat-wrap { transform-box: view-box; transform-origin: 200px 140px; animation: rock 7s ease-in-out infinite; }
   @keyframes rock { 0%, 100% { transform: translateY(0) rotate(-1.5deg); } 50% { transform: translateY(-4px) rotate(1.5deg); } }
-  .shooting-star { animation: shoot 3s ease-in infinite; }
+
+  .moon-pulse { animation: pulse 5s infinite alternate; transform-origin: center; }
+  @keyframes pulse { 0% { opacity: 0.85; transform: scale(0.98); } 100% { opacity: 1; transform: scale(1.02); } }
+
+  .shooting-star { animation: shoot 4s ease-in infinite; }
   @keyframes shoot {
-    0% { transform: translate(300px, 20px); opacity: 1; }
-    20% { transform: translate(100px, 80px); opacity: 0; }
-    100% { transform: translate(100px, 80px); opacity: 0; }
+    0% { transform: translate(350px, 10px); opacity: 1; }
+    15% { transform: translate(200px, 60px); opacity: 0; }
+    100% { transform: translate(200px, 60px); opacity: 0; }
   }
 
   .signature {
-    font-family: 'Great Vibes', cursive; font-size: 1.8rem; color: var(--gold);
-    text-align: right; margin-top: 15px; opacity: 0; transform: translateY(10px); transition: 0.8s ease 0.5s;
+    font-family: 'Great Vibes', cursive; font-size: 2rem; color: var(--gold);
+    text-align: right; margin-top: 20px; opacity: 0; transform: translateY(15px); transition: 1s ease 0.8s;
+    text-shadow: 0 5px 15px rgba(0,0,0,0.5);
   }
   .signature.visible { opacity: 1; transform: translateY(0); }
 
   /* ================= NAVIGATION ================= */
-  .nav { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; transform: translateZ(30px); }
+  .nav { display: flex; justify-content: space-between; align-items: center; margin-top: 25px; transform: translateZ(25px); }
   .nav-btn {
-    background: transparent; border: none; color: var(--gold);
-    font-family: inherit; font-size: 0.75rem; font-weight: 600; letter-spacing: 1px;
-    display: none; align-items: center; gap: 5px; padding: 10px 0; cursor: pointer;
+    background: transparent; border: none; color: var(--gold-dim);
+    font-family: inherit; font-size: 0.75rem; font-weight: 600; letter-spacing: 2px;
+    display: none; align-items: center; gap: 8px; padding: 10px 0; cursor: pointer; transition: 0.3s;
   }
-  .nav-btn.show { display: flex; animation: fadeIn 0.4s ease; }
+  .nav-btn.show { display: flex; animation: fadeIn 0.6s ease; }
+  .nav-btn:active { color: var(--gold); }
   .nav-btn svg { width: 16px; height: 16px; }
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
   /* ================= MUSIC PLAYER ================= */
   .music {
     position: fixed; bottom: calc(20px + env(safe-area-inset-bottom, 20px)); left: 20px;
-    display: flex; align-items: center; gap: 10px; padding: 8px 12px 8px 8px;
-    background: rgba(10,10,15,0.8); backdrop-filter: blur(10px); border: 1px solid var(--glass-border);
-    border-radius: 50px; z-index: 1000; opacity: 0; pointer-events: none; transition: 0.4s;
+    display: flex; align-items: center; gap: 12px; padding: 8px 16px 8px 8px;
+    background: rgba(5,5,10,0.7); backdrop-filter: blur(15px); border: 1px solid var(--glass-border);
+    border-radius: 50px; z-index: 1000; opacity: 0; pointer-events: none; transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: translateY(20px);
   }
-  body.modal-open .music { opacity: 1; pointer-events: auto; }
+  body.modal-open .music { opacity: 1; pointer-events: auto; transform: translateY(0); }
   .music svg { width: 14px; height: 14px; fill: var(--gold); }
-  .icon { width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; }
-  .bars { display: flex; gap: 2px; align-items: flex-end; height: 12px; }
-  .bar { width: 2px; height: 100%; background: var(--gold); border-radius: 1px; transform-origin: bottom; transform: scaleY(0.2); }
-  .music.playing .bar { animation: eq 0.8s ease-in-out infinite alternate; }
-  .music.playing .bar:nth-child(1) { animation-duration: 0.6s; }
-  .music.playing .bar:nth-child(2) { animation-duration: 0.9s; }
-  .music.playing .bar:nth-child(3) { animation-duration: 0.7s; }
-  .music.playing .bar:nth-child(4) { animation-duration: 1s; }
+  .icon { width: 30px; height: 30px; border-radius: 50%; background: rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center; }
+  .bars { display: flex; gap: 3px; align-items: flex-end; height: 14px; }
+  .bar { width: 2.5px; height: 100%; background: var(--gold); border-radius: 2px; transform-origin: bottom; transform: scaleY(0.2); }
+  .music.playing .bar { animation: eq 0.7s ease-in-out infinite alternate; }
+  .music.playing .bar:nth-child(1) { animation-duration: 0.5s; }
+  .music.playing .bar:nth-child(2) { animation-duration: 0.8s; }
+  .music.playing .bar:nth-child(3) { animation-duration: 0.6s; }
+  .music.playing .bar:nth-child(4) { animation-duration: 0.9s; }
   @keyframes eq { 0% { transform: scaleY(0.2); } 100% { transform: scaleY(1); } }
 </style>
 </head>
 <body>
 
   <div class="noise"></div>
+  <div class="vignette"></div>
   <canvas id="canvas"></canvas>
 
   <audio id="audio" loop preload="auto">
@@ -240,91 +238,137 @@
   </div>
 
   <main class="stage" id="stage">
-    <div class="reveal-wrap"><h1 class="title">Untuk Bila</h1></div>
-    <p class="subtitle">A Journey For You</p>
-    <div class="btn-container">
-      <button class="btn" id="openBtn">Buka Pesan</button>
-    </div>
+    <h1 class="title">Untuk Bila</h1>
+    <p class="subtitle">A Cinematic Reality</p>
+    <button class="btn" id="openBtn">Buka Pesan</button>
   </main>
 
   <div class="overlay" id="overlay">
-    <div class="cards-container" id="cardsContainer">
+    <div class="scene-container" id="sceneContainer">
       
       <!-- KARTU 1 -->
       <div class="card active" id="card0">
         <button class="close" onclick="closeApp()">&times;</button>
-        <p class="msg" id="msg0"></p>
-        <div class="nav">
-          <button class="nav-btn next" id="nextBtn">
-            Lanjut <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
-          </button>
+        <div class="content-wrap">
+          <p class="msg" id="msg0"></p>
+          <div class="nav">
+            <button class="nav-btn next" id="nextBtn">Lanjut <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+          </div>
         </div>
       </div>
 
       <!-- KARTU 2 -->
       <div class="card" id="card1">
         <button class="close" onclick="closeApp()">&times;</button>
-        <p class="msg" id="msg1"></p>
-        
-        <div class="scene" id="scene1">
-          <svg viewBox="0 0 400 225" preserveAspectRatio="xMidYMid slice">
-            <defs>
-              <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#050510"/>
-                <stop offset="60%" stop-color="#101025"/>
-                <stop offset="100%" stop-color="#1a1835"/>
-              </linearGradient>
-              <linearGradient id="ocean" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#101030"/>
-                <stop offset="100%" stop-color="#020205"/>
-              </linearGradient>
-              <radialGradient id="moonGlow" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stop-color="rgba(255, 240, 200, 0.9)"/>
-                <stop offset="40%" stop-color="rgba(255, 240, 200, 0.3)"/>
-                <stop offset="100%" stop-color="rgba(255, 240, 200, 0)"/>
-              </radialGradient>
-            </defs>
+        <div class="content-wrap">
+          <p class="msg" id="msg1"></p>
+          
+          <!-- PANORAMA LAUT MALAM (FOTOREALISTIS) -->
+          <div class="scene" id="scene1">
+            <svg viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice">
+              <defs>
+                <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#02020a"/>
+                  <stop offset="50%" stop-color="#0d0d26"/>
+                  <stop offset="100%" stop-color="#1a1835"/>
+                </linearGradient>
+                <linearGradient id="seaGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#0a0a1a"/>
+                  <stop offset="100%" stop-color="#000000"/>
+                </linearGradient>
+                
+                <radialGradient id="moonLight" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="rgba(255, 250, 240, 1)"/>
+                  <stop offset="10%" stop-color="rgba(255, 240, 210, 0.9)"/>
+                  <stop offset="40%" stop-color="rgba(255, 220, 160, 0.2)"/>
+                  <stop offset="100%" stop-color="rgba(255, 220, 160, 0)"/>
+                </radialGradient>
+                
+                <linearGradient id="waterReflect" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="rgba(255, 240, 200, 0.4)"/>
+                  <stop offset="100%" stop-color="rgba(255, 240, 200, 0)"/>
+                </linearGradient>
 
-            <rect width="400" height="140" fill="url(#sky)"/>
-            <line class="shooting-star" x1="300" y1="20" x2="280" y2="40" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
-            <path d="M0,120 Q50,90 120,110 T250,100 T400,115 L400,140 L0,140 Z" fill="#0b0b1a" opacity="0.6"/>
-            <path d="M-50,135 Q80,110 180,130 T450,120 L450,140 L-50,140 Z" fill="#080812" opacity="0.8"/>
+                <filter id="blurGlow" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur stdDeviation="6" result="blur"/>
+                  <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+                <filter id="softBlur"><feGaussianBlur stdDeviation="2"/></filter>
+              </defs>
 
-            <g class="moon">
-              <circle cx="320" cy="45" r="40" fill="url(#moonGlow)"/>
-              <circle cx="320" cy="45" r="12" fill="#fff8ea"/>
-            </g>
+              <!-- 1. LANGIT & BINTANG -->
+              <rect width="400" height="140" fill="url(#skyGrad)"/>
+              <g fill="#fff">
+                <circle cx="50" cy="30" r="0.8" opacity="0.6"/><circle cx="120" cy="60" r="1" opacity="0.4"/>
+                <circle cx="200" cy="20" r="1.2" opacity="0.8"/><circle cx="350" cy="40" r="0.6" opacity="0.5"/>
+                <circle cx="280" cy="80" r="1" opacity="0.3"/><circle cx="80" cy="100" r="0.8" opacity="0.7"/>
+                <circle cx="150" cy="40" r="0.5" opacity="0.8"/><circle cx="380" cy="110" r="1" opacity="0.4"/>
+              </g>
+              
+              <!-- Bintang Jatuh -->
+              <line class="shooting-star" x1="350" y1="10" x2="320" y2="40" stroke="#fff" stroke-width="1.5" stroke-linecap="round" opacity="0.8" filter="url(#softBlur)"/>
 
-            <rect y="140" width="400" height="85" fill="url(#ocean)"/>
-            
-            <g stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="none">
-              <path class="wave-1" d="M -200 150 Q -150 145 -100 150 T 0 150 T 100 150 T 200 150 T 300 150 T 400 150 T 500 150 T 600 150" />
-              <path class="wave-2" d="M -200 170 Q -120 165 -40 170 T 120 170 T 280 170 T 440 170 T 600 170" stroke="rgba(255,255,255,0.08)" stroke-width="2" />
-              <path class="wave-3" d="M -200 195 Q -80 188 40 195 T 280 195 T 520 195 T 600 195" stroke="rgba(255,255,255,0.05)" stroke-width="2.5" />
-            </g>
+              <!-- 2. BULAN -->
+              <g class="moon-pulse">
+                <circle cx="320" cy="50" r="50" fill="url(#moonLight)"/>
+                <circle cx="320" cy="50" r="14" fill="#fffdfa" filter="url(#blurGlow)"/>
+                <circle cx="316" cy="46" r="3" fill="rgba(0,0,0,0.05)"/>
+                <circle cx="323" cy="52" r="4" fill="rgba(0,0,0,0.04)"/>
+              </g>
 
-            <g class="boat">
-              <circle cx="200" cy="135" r="8" fill="rgba(255, 200, 100, 0.3)" filter="blur(2px)"/>
-              <circle cx="200" cy="135" r="2" fill="#ffcc80"/>
-              <line x1="200" y1="90" x2="200" y2="140" stroke="#0a0a0a" stroke-width="2" />
-              <path d="M 200 90 Q 170 110 165 138 L 200 138 Z" fill="#151515" />
-              <path d="M 200 90 Q 230 110 235 138 L 200 138 Z" fill="#1d1d1d" />
-              <path d="M 155 138 Q 175 150 200 150 Q 225 150 245 138 Q 200 145 155 138 Z" fill="#050505" />
-              <circle cx="192" cy="118" r="3" fill="#050505"/>
-              <line x1="192" y1="121" x2="192" y2="140" stroke="#050505" stroke-width="2.5" />
-              <circle cx="200" cy="120" r="2.8" fill="#050505"/>
-              <path d="M 197 123 L 203 123 L 204 140 L 196 140 Z" fill="#050505" />
-              <circle cx="196" cy="128" r="5" fill="rgba(255,200,100,0.2)" filter="blur(1px)"/>
-            </g>
-          </svg>
-        </div>
-        
-        <p class="signature" id="sig1">— Fitra</p>
-        
-        <div class="nav">
-          <button class="nav-btn prev" id="prevBtn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg> Kembali
-          </button>
+              <!-- 3. GUNUNG & KABUT -->
+              <path d="M0,120 Q60,100 130,120 T280,110 T400,125 L400,140 L0,140 Z" fill="#05050f"/>
+              <path d="M-50,130 Q100,110 200,125 T450,115 L450,140 L-50,140 Z" fill="#020208" opacity="0.8"/>
+              <rect y="130" width="400" height="20" fill="rgba(20, 20, 40, 0.4)" filter="url(#blurGlow)"/>
+
+              <!-- 4. LAUTAN DALAM -->
+              <rect y="140" width="400" height="110" fill="url(#seaGrad)"/>
+              <path d="M300,140 L340,140 L330,200 L310,200 Z" fill="url(#waterReflect)" filter="url(#softBlur)"/>
+              
+              <!-- 5. GELOMBANG BELAKANG -->
+              <g class="water-layer layer-1" stroke="rgba(255,255,255,0.08)" stroke-width="1.5" fill="none">
+                <path d="M -200 160 Q -150 155 -100 160 T 0 160 T 100 160 T 200 160 T 300 160 T 400 160 T 500 160 T 600 160" />
+              </g>
+
+              <!-- 6. KAPAL & SEPASANG MANUSIA -->
+              <g class="boat-wrap">
+                <circle cx="200" cy="148" r="15" fill="rgba(255, 180, 100, 0.15)" filter="url(#blurGlow)"/>
+                <circle cx="200" cy="148" r="4" fill="#ffb366" filter="url(#blurGlow)"/>
+                
+                <line x1="200" y1="100" x2="200" y2="150" stroke="#000" stroke-width="2.5" />
+                <path d="M 200 100 Q 165 120 160 148 L 200 148 Z" fill="#0a0a0c" />
+                <path d="M 200 100 Q 235 120 240 148 L 200 148 Z" fill="#111114" />
+                <path d="M 150 148 Q 175 165 200 165 Q 225 165 250 148 Q 200 158 150 148 Z" fill="#030303" />
+
+                <g>
+                  <circle cx="191" cy="126" r="3.5" fill="#000"/>
+                  <line x1="191" y1="130" x2="191" y2="152" stroke="#000" stroke-width="3" stroke-linecap="round" />
+                  <line x1="191" y1="136" x2="197" y2="140" stroke="#000" stroke-width="2" stroke-linecap="round" />
+                </g>
+
+                <g>
+                  <circle cx="201" cy="128" r="3" fill="#000"/>
+                  <path d="M 198 128 Q 205 130 205 140" stroke="#000" stroke-width="2" fill="none"/>
+                  <path d="M 197 131 L 203 131 L 206 152 L 194 152 Z" fill="#000" />
+                  <line x1="201" y1="136" x2="197" y2="140" stroke="#000" stroke-width="2" stroke-linecap="round" />
+                </g>
+              </g>
+
+              <!-- 7. GELOMBANG DEPAN -->
+              <g class="water-layer layer-2" stroke="rgba(255,255,255,0.12)" stroke-width="2" fill="none">
+                <path d="M -200 180 Q -120 175 -40 180 T 120 180 T 280 180 T 440 180 T 600 180" />
+              </g>
+              <g class="water-layer layer-3" stroke="rgba(255,255,255,0.05)" stroke-width="3" fill="none">
+                <path d="M -200 220 Q -80 215 40 220 T 280 220 T 520 220 T 600 220" />
+              </g>
+            </svg>
+          </div>
+          
+          <p class="signature" id="sig1">— Fitra</p>
+          
+          <div class="nav">
+            <button class="nav-btn prev" id="prevBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg> Kembali</button>
+          </div>
         </div>
       </div>
 
@@ -338,29 +382,33 @@
   const isTouch = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
 
   /* =========================================
-     1. PARTICLE ENGINE (Magical Fireflies)
+     1. CANVAS PARTICLES
      ========================================= */
   const canvas = document.getElementById('canvas');
   const ctx = canvas.getContext('2d');
   let W, H, particles = [];
-  const mouse = { x: -1000, y: -1000, radius: 120 };
+  const mouse = { x: -1000, y: -1000, radius: 150 };
 
   function initCanvas() {
     W = canvas.width = window.innerWidth;
     H = canvas.height = window.innerHeight;
     particles = [];
-    const count = isTouch ? 40 : 80;
+    const count = isTouch ? 50 : 100;
     for (let i = 0; i < count; i++) {
+      const isForeground = Math.random() > 0.7;
       particles.push({
         x: Math.random() * W, y: Math.random() * H,
-        vx: (Math.random() - 0.5) * 0.5, vy: (Math.random() - 0.5) * 0.5,
-        size: Math.random() * 2 + 1
+        vx: (Math.random() - 0.5) * 0.4, vy: (Math.random() - 0.5) * 0.4,
+        size: isForeground ? Math.random() * 4 + 2 : Math.random() * 1.5 + 0.5,
+        blur: isForeground ? 3 : 0,
+        color: Math.random() > 0.5 ? '247, 223, 181' : '255, 255, 255'
       });
     }
   }
 
   function draw() {
     ctx.clearRect(0, 0, W, H);
+    
     particles.forEach(p => {
       p.x += p.vx; p.y += p.vy;
       if (p.x < 0 || p.x > W) p.vx *= -1;
@@ -368,34 +416,25 @@
 
       let dx = mouse.x - p.x, dy = mouse.y - p.y;
       let dist = Math.sqrt(dx*dx + dy*dy);
+      
       if (dist < mouse.radius) {
         const force = (mouse.radius - dist) / mouse.radius;
-        p.x -= dx / dist * force * 5;
-        p.y -= dy / dist * force * 5;
+        p.x -= dx / dist * force * 8;
+        p.y -= dy / dist * force * 8;
       }
 
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(240, 213, 171, ${Math.random() * 0.5 + 0.3})`;
-      ctx.shadowBlur = 10;
-      ctx.shadowColor = '#f0d5ab';
-      ctx.fill();
-      ctx.shadowBlur = 0;
-    });
-
-    for (let i = 0; i < particles.length; i++) {
-      for (let j = i + 1; j < particles.length; j++) {
-        let dx = particles[i].x - particles[j].x, dy = particles[i].y - particles[j].y;
-        let dist = Math.sqrt(dx*dx + dy*dy);
-        if (dist < 80) {
-          ctx.beginPath();
-          ctx.moveTo(particles[i].x, particles[i].y);
-          ctx.lineTo(particles[j].x, particles[j].y);
-          ctx.strokeStyle = `rgba(240, 213, 171, ${0.1 - dist/800})`;
-          ctx.stroke();
-        }
+      ctx.fillStyle = `rgba(${p.color}, ${Math.random() * 0.4 + 0.2})`;
+      
+      if (p.blur > 0) {
+        ctx.shadowBlur = p.blur * 5;
+        ctx.shadowColor = `rgba(${p.color}, 0.8)`;
       }
-    }
+      
+      ctx.fill();
+      ctx.shadowBlur = 0; 
+    });
     requestAnimationFrame(draw);
   }
 
@@ -404,48 +443,69 @@
   draw();
 
   /* =========================================
-     2. INTERAKSI (Touch & Gyro Parallax)
+     2. 3D PARALLAX
      ========================================= */
-  if (isTouch) {
-    window.addEventListener('touchmove', (e) => {
-      const t = e.touches[0];
-      mouse.x = t.clientX; mouse.y = t.clientY;
-    }, { passive: true });
-    window.addEventListener('touchend', () => { mouse.x = -1000; mouse.y = -1000; });
+  const sceneContainer = document.getElementById('sceneContainer');
+  const card0 = document.getElementById('card0');
+  const card1 = document.getElementById('card1');
 
+  if (isTouch) {
     window.addEventListener('deviceorientation', (e) => {
       if (!e.gamma || !e.beta) return;
-      const tiltX = Math.max(Math.min(e.gamma, 30), -30);
-      const tiltY = Math.max(Math.min(e.beta - 45, 30), -30);
-      canvas.style.transform = `translate(${-tiltX}px, ${-tiltY}px) scale(1.05)`;
-    });
-  } else {
-    window.addEventListener('mousemove', (e) => {
-      mouse.x = e.clientX; mouse.y = e.clientY;
+      const tiltX = Math.max(Math.min(e.gamma, 25), -25);
+      const tiltY = Math.max(Math.min(e.beta - 45, 25), -25);
+      
+      sceneContainer.style.transform = `perspective(1200px) rotateX(${-tiltY * 0.5}deg) rotateY(${tiltX * 0.5}deg)`;
+      canvas.style.transform = `translate(${-tiltX * 0.5}px, ${-tiltY * 0.5}px) scale(1.05)`;
+      
+      const percentX = (tiltX + 25) / 50 * 100;
+      const percentY = (tiltY + 25) / 50 * 100;
+      document.querySelectorAll('.card').forEach(c => {
+        c.style.setProperty('--mouse-x', `${percentX}%`);
+        c.style.setProperty('--mouse-y', `${percentY}%`);
+      });
     });
   }
 
+  sceneContainer.addEventListener('mousemove', (e) => {
+    if (isTouch) return;
+    const rect = sceneContainer.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotX = ((y - centerY) / centerY) * -8;
+    const rotY = ((x - centerX) / centerX) * 8;
+    
+    sceneContainer.style.transform = `perspective(1200px) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+    
+    document.querySelectorAll('.card').forEach(c => {
+      c.style.setProperty('--mouse-x', `${x}px`);
+      c.style.setProperty('--mouse-y', `${y}px`);
+    });
+  });
+  
+  sceneContainer.addEventListener('mouseleave', () => {
+    if (isTouch) return;
+    sceneContainer.style.transform = `perspective(1200px) rotateX(0) rotateY(0)`;
+  });
+
   /* =========================================
-     3. LOGIKA KARTU & TYPEWRITER
+     3. UI LOGIC & TYPEWRITER
      ========================================= */
   const overlay = document.getElementById('overlay');
   const openBtn = document.getElementById('openBtn');
   const stage = document.getElementById('stage');
-  const cardsContainer = document.getElementById('cardsContainer');
-  
-  const card0 = document.getElementById('card0');
-  const card1 = document.getElementById('card1');
-  
   const nextBtn = document.getElementById('nextBtn');
   const prevBtn = document.getElementById('prevBtn');
-  
   const audio = document.getElementById('audio');
   const musicBtn = document.getElementById('musicBtn');
   let isPlaying = false;
 
+  // TEKS PESAN YANG SUDAH DIPERBARUI
   const texts = [
-    'Bilaa, semangat yaa kerjanyaa 🌻🫶\n\nIni aku lagi nyoba bikin sesuatu buat kamu.\n\nKeprok atuh hahaha 👏\n\nSemoga hal-hal baik selalu menyertai hubungan kita.',
-    'Mari berlayar, membuka hal-hal baru, bersama.'
+    'Hai Bila. Aku bikin ini bukan buat pamer, tapi murni karena pengen lihat kamu senyum hari ini. Terima kasih ya udah bertahan dan berusaha sejauh ini. Jangan lupa istirahat, aku bangga sama kamu. 🌻',
+    'Masih banyak hal seru yang belum kita jelajahi. Mari berlayar, membuka hal-hal baru, bersama. Aku akan selalu ada di sini nemenin kamu.'
   ];
 
   let currSlide = 0;
@@ -471,13 +531,13 @@
     function type() {
       if (lIdx >= lines.length) {
         setTimeout(() => cursor.remove(), 500);
-        if(scene) setTimeout(() => scene.classList.add('visible'), 200);
-        if(sig) setTimeout(() => sig.classList.add('visible'), 1000);
+        if(scene) setTimeout(() => scene.classList.add('visible'), 300);
+        if(sig) setTimeout(() => sig.classList.add('visible'), 1200);
         setTimeout(() => {
           typed[idx] = true;
           if(idx === 0) nextBtn.classList.add('show');
           if(idx === 1) prevBtn.classList.add('show');
-        }, 1200);
+        }, 1400);
         return;
       }
 
@@ -494,11 +554,11 @@
         cursor.before(document.createTextNode(chars[cIdx]));
         cIdx++;
         let delay = 40 + Math.random() * 20;
-        if(/[.,!?]/.test(chars[cIdx-1])) delay = 200;
+        if(/[.,!?]/.test(chars[cIdx-1])) delay = 250;
         typeTimer = setTimeout(type, delay);
       } else {
         lIdx++; cIdx = 0;
-        typeTimer = setTimeout(type, 250);
+        typeTimer = setTimeout(type, 300);
       }
     }
     type();
@@ -510,23 +570,21 @@
     nextBtn.classList.remove('show'); prevBtn.classList.remove('show');
 
     if (idx === 1) {
-      // Pindah ke Kartu 2 (Maju)
       card0.classList.remove('active');
-      card0.classList.add('exit-forward');
+      card0.classList.add('exit-back');
       card1.classList.remove('exit-back');
       card1.classList.add('active');
     } else {
-      // Pindah ke Kartu 1 (Mundur)
       card1.classList.remove('active');
       card1.classList.add('exit-back');
-      card0.classList.remove('exit-forward');
+      card0.classList.remove('exit-back');
       card0.classList.add('active');
     }
 
     currSlide = idx;
 
     if(!typed[idx]) {
-      setTimeout(() => typeText(idx), 400);
+      setTimeout(() => typeText(idx), 500);
     } else {
       if(idx === 0) nextBtn.classList.add('show');
       if(idx === 1) prevBtn.classList.add('show');
@@ -549,7 +607,7 @@
       isPlaying = true; musicBtn.classList.add('playing');
     }).catch(() => console.log("Autoplay block"));
 
-    setTimeout(() => typeText(0), 600);
+    setTimeout(() => typeText(0), 800);
   }
 
   function closeApp() {
@@ -562,7 +620,7 @@
     setTimeout(() => {
       currSlide = 0; typed = [false, false];
       card1.classList.remove('active', 'exit-back');
-      card0.classList.remove('exit-forward');
+      card0.classList.remove('exit-back');
       card0.classList.add('active');
       
       document.getElementById('msg0').innerHTML = '';
@@ -571,42 +629,18 @@
       document.getElementById('sig1').classList.remove('visible');
       nextBtn.classList.remove('show'); prevBtn.classList.remove('show');
       
-      cardsContainer.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+      sceneContainer.style.transform = 'perspective(1200px) rotateX(0) rotateY(0)';
     }, 500);
   }
 
+  window.closeApp = closeApp;
   openBtn.onclick = openApp;
+  
   musicBtn.onclick = () => {
     if(isPlaying) { audio.pause(); musicBtn.classList.remove('playing'); }
     else { audio.play(); musicBtn.classList.add('playing'); }
     isPlaying = !isPlaying;
   };
-
-  /* =========================================
-     5. SPOTLIGHT & 3D TILT
-     ========================================= */
-  cardsContainer.addEventListener('touchmove', (e) => {
-    const t = e.touches[0];
-    const activeCard = document.querySelector('.card.active');
-    if(!activeCard) return;
-
-    const rect = activeCard.getBoundingClientRect();
-    const x = t.clientX - rect.left;
-    const y = t.clientY - rect.top;
-    
-    activeCard.style.setProperty('--x', `${x}px`);
-    activeCard.style.setProperty('--y', `${y}px`);
-
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const rotX = ((y - centerY) / centerY) * -5;
-    const rotY = ((x - centerX) / centerX) * 5;
-    cardsContainer.style.transform = `perspective(1000px) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
-  }, { passive: true });
-
-  cardsContainer.addEventListener('touchend', () => {
-    cardsContainer.style.transform = `perspective(1000px) rotateX(0) rotateY(0)`;
-  });
 
 })();
 </script>
