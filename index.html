@@ -11,7 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Plus+Jakarta+Sans:wght@200;300;400;600&family=Great+Vibes&display=swap" rel="stylesheet">
 
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
 
   :root {
     --gold: #f7dfb5;
@@ -45,11 +45,10 @@
 
   /* ================= STAGE (LANDING) ================= */
   .stage {
-    position: relative; z-index: 10; text-align: center; transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative; z-index: 50; text-align: center; transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .stage.hidden { opacity: 0; transform: scale(1.5) translateZ(200px); pointer-events: none; filter: blur(20px); }
 
-  /* Efek Emas Berkilau */
   .title {
     font-family: 'Cinzel', serif; font-size: clamp(3.2rem, 14vw, 5rem); font-weight: 700;
     background: linear-gradient(to right, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
@@ -68,14 +67,14 @@
   }
 
   .btn {
-    position: relative; overflow: hidden; padding: 18px 50px; 
+    position: relative; overflow: hidden; padding: 18px 50px; z-index: 60;
     background: rgba(247, 223, 181, 0.05); border: 1px solid var(--gold-dim);
     border-radius: 50px; color: var(--gold-bright); font-family: inherit; font-size: 0.9rem; font-weight: 600; letter-spacing: 3px;
     cursor: pointer; animation: revealUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both;
     box-shadow: 0 0 40px rgba(247,223,181,0.15), inset 0 0 20px rgba(247,223,181,0.1);
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
-  .btn:active { transform: scale(0.9); background: var(--gold); color: #000; }
+  .btn:active { transform: scale(0.95); background: var(--gold); color: #000; }
   
   @keyframes revealUp {
     0% { opacity: 0; transform: translateY(40px) scale(0.9); filter: blur(10px); }
@@ -111,6 +110,7 @@
     transition: all 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
     transform-style: preserve-3d;
     transform-origin: center right;
+    pointer-events: none;
   }
 
   .card.active {
@@ -119,6 +119,7 @@
     filter: blur(0) brightness(1);
     z-index: 10;
     transform-origin: center center;
+    pointer-events: auto;
   }
   
   .card.exit {
@@ -127,6 +128,7 @@
     filter: blur(20px) brightness(0.2);
     transform-origin: center left;
     z-index: 5;
+    pointer-events: none;
   }
 
   .card::before {
@@ -196,7 +198,7 @@
   .signature.visible { opacity: 1; transform: translateY(0); }
 
   /* ================= NAVIGATION ================= */
-  .nav { display: flex; justify-content: space-between; align-items: center; margin-top: 25px; transform: translateZ(25px); }
+  .nav { display: flex; justify-content: space-between; align-items: center; margin-top: 25px; transform: translateZ(25px); position: relative; z-index: 50; }
   .nav-btn {
     background: transparent; border: none; color: var(--gold-dim);
     font-family: inherit; font-size: 0.8rem; font-weight: 600; letter-spacing: 2px;
@@ -213,7 +215,7 @@
     display: flex; align-items: center; gap: 12px; padding: 8px 16px 8px 8px;
     background: rgba(5,5,10,0.8); backdrop-filter: blur(15px); border: 1px solid var(--glass-border);
     border-radius: 50px; z-index: 1000; opacity: 0; pointer-events: none; transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-    transform: translateY(30px);
+    transform: translateY(30px); cursor: pointer;
   }
   body.modal-open .music { opacity: 1; pointer-events: auto; transform: translateY(0); }
   .music svg { width: 14px; height: 14px; fill: var(--gold); }
@@ -359,14 +361,13 @@
   const isTouch = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
 
   /* =========================================
-     1. CANVAS ENGINE: Particles, Shockwave, & Stardust
+     1. CANVAS ENGINE: Particles & Water Ripples
      ========================================= */
   const canvas = document.getElementById('canvas');
   const ctx = canvas.getContext('2d');
   let W, H;
   let particles = [];
-  let shockwaves = [];
-  let stardust = [];
+  let ripples = []; // Menyimpan data gelombang air
   const mouse = { x: -1000, y: -1000, radius: 150 };
 
   function initCanvas() {
@@ -386,39 +387,27 @@
     }
   }
 
-  // 1. Efek Shockwave saat di-klik
-  function spawnShockwave(x, y) {
-    shockwaves.push({ x, y, radius: 0, maxRadius: 300, opacity: 1 });
-    // Tembakan partikel
-    for (let i = 0; i < 50; i++) {
-      const angle = Math.random() * Math.PI * 2;
-      const speed = Math.random() * 10 + 2;
-      stardust.push({
-        x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
-        size: Math.random() * 4 + 1, life: 1, decay: Math.random() * 0.02 + 0.015,
-        color: '255, 223, 181'
+  // FUNGSI EFEK GELOMBANG AIR (WATER RIPPLE)
+  function spawnWaterRipple(x, y) {
+    // Kita buat 3 lapisan riak air (seperti tetesan air yang memantul)
+    for (let i = 0; i < 3; i++) {
+      ripples.push({
+        x: x,
+        y: y,
+        radius: i * 10,          // Mulai dari kecil
+        maxRadius: 150 + (i * 30), // Ukuran maksimal
+        opacity: 0.8 - (i * 0.2),  // Makin luar makin pudar
+        speed: 3 + (i * 0.5),      // Kecepatan merambat
+        decay: 0.015 + (i * 0.005),// Kecepatan pudar
+        lineWidth: 2 - (i * 0.5)   // Ketebalan garis
       });
-    }
-  }
-
-  // 2. Efek Hujan Bintang (Slide 2)
-  function spawnStardustShower() {
-    for (let i = 0; i < 100; i++) {
-      setTimeout(() => {
-        stardust.push({
-          x: Math.random() * W, y: -20,
-          vx: (Math.random() - 0.5) * 2, vy: Math.random() * 3 + 1,
-          size: Math.random() * 3 + 1, life: 1, decay: 0.005,
-          color: '247, 223, 181'
-        });
-      }, Math.random() * 1500); // Jatuh bergantian
     }
   }
 
   function draw() {
     ctx.clearRect(0, 0, W, H);
     
-    // Draw Particles
+    // 1. Gambar Partikel Latar
     particles.forEach(p => {
       p.x += p.vx; p.y += p.vy;
       if (p.x < 0 || p.x > W) p.vx *= -1;
@@ -441,34 +430,33 @@
       ctx.shadowBlur = 0; 
     });
 
-    // Draw Shockwaves
-    for (let i = shockwaves.length - 1; i >= 0; i--) {
-      let sw = shockwaves[i];
-      sw.radius += 8;
-      sw.opacity -= 0.02;
-      if (sw.opacity <= 0) { shockwaves.splice(i, 1); continue; }
+    // 2. Gambar Gelombang Air
+    for (let i = ripples.length - 1; i >= 0; i--) {
+      let r = ripples[i];
+      
+      // Update posisi dan ukuran
+      r.radius += r.speed;
+      r.opacity -= r.decay;
 
+      // Hapus jika sudah tak terlihat atau terlalu besar
+      if (r.opacity <= 0 || r.radius >= r.maxRadius) {
+        ripples.splice(i, 1);
+        continue;
+      }
+
+      // Gambar cincin luar
       ctx.beginPath();
-      ctx.arc(sw.x, sw.y, sw.radius, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(247, 223, 181, ${sw.opacity})`;
-      ctx.lineWidth = 2;
+      ctx.arc(r.x, r.y, r.radius, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(247, 223, 181, ${r.opacity})`; // Warna emas
+      ctx.lineWidth = r.lineWidth;
       ctx.stroke();
-    }
 
-    // Draw Stardust (Ledakan/Hujan)
-    for (let i = stardust.length - 1; i >= 0; i--) {
-      let sd = stardust[i];
-      sd.x += sd.vx; sd.y += sd.vy;
-      sd.vx *= 0.96; sd.vy *= 0.96;
-      sd.life -= sd.decay;
-      if (sd.life <= 0) { stardust.splice(i, 1); continue; }
-
+      // Efek pantulan cahaya tipis di dalam cincin
       ctx.beginPath();
-      ctx.arc(sd.x, sd.y, sd.size, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(${sd.color}, ${sd.life})`;
-      ctx.shadowBlur = 10; ctx.shadowColor = `rgba(${sd.color}, ${sd.life})`;
-      ctx.fill();
-      ctx.shadowBlur = 0;
+      ctx.arc(r.x, r.y, r.radius - 1.5, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(255, 255, 255, ${r.opacity * 0.4})`;
+      ctx.lineWidth = 0.5;
+      ctx.stroke();
     }
 
     requestAnimationFrame(draw);
@@ -477,14 +465,6 @@
   window.addEventListener('resize', initCanvas);
   initCanvas();
   draw();
-
-  // Deteksi Klik Global untuk Shockwave
-  window.addEventListener('pointerdown', (e) => {
-    // Hanya munculkan shockwave jika layar belum penuh dengan kartu
-    if(!document.getElementById('overlay').classList.contains('open')) {
-      spawnShockwave(e.clientX, e.clientY);
-    }
-  });
 
   /* =========================================
      2. 3D PARALLAX (Gyroscope)
@@ -584,7 +564,7 @@
     type();
   }
 
-  function goTo(idx, e) {
+  function goTo(idx) {
     if(idx === currSlide) return;
     clearTimeout(typeTimer);
     nextBtn.classList.remove('show'); prevBtn.classList.remove('show');
@@ -605,20 +585,18 @@
 
     if(!typed[idx]) {
       setTimeout(() => typeText(idx), 600);
-      if(idx === 1) spawnStardustShower(); // Hujan emas saat pindah ke kapal
     } else {
       if(idx === 0) nextBtn.classList.add('show');
       if(idx === 1) prevBtn.classList.add('show');
     }
   }
 
-  nextBtn.onclick = (e) => goTo(1, e);
-  prevBtn.onclick = (e) => goTo(0, e);
-
   /* =========================================
-     4. OPEN / CLOSE APP
+     4. OPEN / CLOSE APP & EVENTS
      ========================================= */
-  function openApp() {
+  function openApp(e) {
+    if(e) e.preventDefault(); 
+    
     overlay.classList.add('open');
     document.body.classList.add('modal-open');
     stage.classList.add('hidden');
@@ -655,13 +633,36 @@
   }
 
   window.closeApp = closeApp;
-  openBtn.onclick = openApp;
+
+  // Event Pointer untuk Tombol (Buka & Navigasi)
+  openBtn.addEventListener('pointerdown', (e) => {
+    spawnWaterRipple(e.clientX, e.clientY); // Efek riak air muncul di tombol
+    openApp(e);
+  });
+
+  nextBtn.addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+    goTo(1);
+  });
+
+  prevBtn.addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+    goTo(0);
+  });
   
-  musicBtn.onclick = () => {
+  musicBtn.addEventListener('pointerdown', (e) => {
+    e.preventDefault();
     if(isPlaying) { audio.pause(); musicBtn.classList.remove('playing'); }
     else { audio.play(); musicBtn.classList.add('playing'); }
     isPlaying = !isPlaying;
-  };
+  });
+
+  // Event Pointer Global untuk latar belakang (Biar bisa main air di mana saja)
+  window.addEventListener('pointerdown', (e) => {
+    if(!document.getElementById('overlay').classList.contains('open')) {
+      spawnWaterRipple(e.clientX, e.clientY);
+    }
+  });
 
 })();
 </script>
